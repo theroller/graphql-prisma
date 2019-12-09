@@ -1,0 +1,17 @@
+~*
+*.log
+.env*
+!.env.j2
+*.orig
+*.tgz
+
+**/temp/
+.nyc_output/
+build/
+coverage/
+logs/
+node_modules/
+
+# Non-VSCode Editor settings
+.sublime/
+.idea/
