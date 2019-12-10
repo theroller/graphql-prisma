@@ -1,10 +1,8 @@
-type User {
+type Comment {
   id: ID! @id
-  createdAt: DateTime! @createdAt
-  updatedAt: DateTime! @updatedAt
-  name: String!
-  email: String! @unique
-  posts: [Post!]! @relation(link: TABLE)
+  text: String!
+  author: User! @relation(link: INLINE)
+  post: Post! @relation(link: INLINE)
 }
 
 type Post {
@@ -13,4 +11,13 @@ type Post {
   body: String!
   published: Boolean! @default(value: false)
   author: User!
+}
+
+type User {
+  id: ID! @id
+  createdAt: DateTime! @createdAt
+  updatedAt: DateTime! @updatedAt
+  name: String!
+  email: String! @unique
+  posts: [Post!]! @relation(link: TABLE)
 }
