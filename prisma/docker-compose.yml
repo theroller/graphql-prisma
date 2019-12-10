@@ -21,3 +21,4 @@ services:
             user: "${POSTGRES_USER}"
             password: "${POSTGRES_PASSWORD}"
             migrations: true
+            ssl: true
