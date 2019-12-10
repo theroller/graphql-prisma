@@ -2,13 +2,39 @@
   "name": "graphql-prisma",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
+    "debug": "node -r esm --nolazy --inspect-brk=9229 src/index.js",
+    "get-schema": "graphql get-schema -p prisma",
+    "start": "nodemon src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "James Roller, Jr. <og.readmore@gmail.com>",
   "dependencies": {
-    "prisma": "^1.34.10"
+    "babel-eslint": "^10.0.3",
+    "eslint": "^6.7.2",
+    "esm": "^3.2.25",
+    "graphql-cli": "^3.0.14",
+    "graphql-yoga": "^1.18.3",
+    "prisma": "^1.34.10",
+    "prisma-binding": "^2.3.16",
+    "uuid": "^3.3.3"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.1"
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "test/*"
+    ],
+    "execMap": {
+      "js": "node -r esm"
+    },
+    "ext": "graphql,js,json",
+    "watch": [
+      "src"
+    ],
+    "verbose": false
   }
 }
