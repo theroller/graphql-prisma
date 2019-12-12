@@ -1,8 +1,8 @@
 type Comment {
   id: ID! @id
   text: String!
-  author: User! @relation(link: INLINE)
-  post: Post! @relation(link: INLINE)
+  author: User!
+  post: Post!
 }
 
 type Post {
@@ -11,6 +11,7 @@ type Post {
   body: String!
   published: Boolean! @default(value: false)
   author: User!
+  comments: [Comment!]! @relation(link: TABLE, onDelete: CASCADE)
 }
 
 type User {
@@ -19,5 +20,6 @@ type User {
   updatedAt: DateTime! @updatedAt
   name: String!
   email: String! @unique
-  posts: [Post!]! @relation(link: TABLE)
+  posts: [Post!]! @relation(link: TABLE, onDelete: CASCADE)
+  comments: [Comment!]! @relation(link: TABLE, onDelete: CASCADE)
 }
