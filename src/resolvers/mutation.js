@@ -41,23 +41,11 @@ const Mutation = {
 
         return deletedComment;
     },
-    deletePost(parent, args, { db, pubsub }) {
-        const postIndex = db.posts.findIndex(post => post.id == args.id);
-        if (postIndex == -1) {
-            throw new Error(`post id ${args.id} not found`);
-        }
-
-        const deletedPost = db.posts.splice(postIndex, 1)[0];
-        db.comments = db.comments.filter(comment => comment.post != args.id);
-
-        if (deletedPost.published) {
-            pubsub.publish('post', { post: { mutation: 'DELETED', data: deletedPost } });
-        }
-
-        return deletedPost;
+    deletePost(parent, { id }, { prisma }, info) {
+        return prisma.mutation.deletePost({ where: { id } }, info);
     },
-    deleteUser(parent, args, { prisma }, info) {
-        return prisma.mutation.deleteUser({ where: { id: args.id } }, info);
+    deleteUser(parent, { id }, { prisma }, info) {
+        return prisma.mutation.deleteUser({ where: { id } }, info);
     },
     updateComment(parent, { id, data }, { db, pubsub }) {
         const comment = db.comments.find(comment => comment.id == id);
@@ -73,35 +61,8 @@ const Mutation = {
 
         return comment;
     },
-    updatePost(parent, { id, data }, { db, pubsub }) {
-        const post = db.posts.find(post => post.id == id);
-        if (!post) {
-            throw new Error(`post id ${id} not found`);
-        }
-
-        const origPost = { ...post };
-
-        if (typeof data.body === 'string') {
-            post.body = data.body;
-        }
-
-        if (typeof data.published === 'boolean') {
-            post.published = data.published;
-
-            if (origPost.published && !data.published) {
-                pubsub.publish('post', { post: { mutation: 'DELETED', data: origPost } });
-            } else if (!origPost.published && data.published) {
-                pubsub.publish('post', { post: { mutation: 'CREATED', data: post } });
-            }
-        } else if (post.published) {
-            pubsub.publish('post', { post: { mutation: 'UPDATED', data: post } });
-        }
-
-        if (typeof data.title === 'string') {
-            post.title = data.title;
-        }
-
-        return post;
+    updatePost(parent, { id, data }, { prisma }, info) {
+        return prisma.mutation.updatePost({ where: { id }, data }, info);
     },
     updateUser(parent, { id, data }, { prisma }, info) {
         return prisma.mutation.updateUser({ where: { id }, data }, info);
