@@ -33,16 +33,13 @@ const Mutation = {
 
         return post;
     },
-    createUser(parent, args, { db }) {
-        let user = db.users.find(user => user.email === args.data.email);
-        if (user) {
-            throw new Error('email taken');
+    async createUser(parent, args, { prisma }, info) {
+        const emailTaken = await prisma.exists.User({ email: args.data.email });
+        if (emailTaken) {
+            throw new Error(`email taken: ${args.data.email}`);
         }
 
-        user = { id: uuidv4(), ...args.data };
-        db.users.push(user);
-
-        return user;
+        return prisma.mutation.createUser({ data: args.data }, info);
     },
     deleteComment(parent, args, { db, pubsub }) {
         const commentIndex = db.comments.findIndex(comment => comment.id == args.id);
