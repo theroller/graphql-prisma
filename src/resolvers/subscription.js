@@ -1,8 +1,25 @@
+import utilGetUserId from '../utils/getUserId';
+
+const SECRET = 'secret1234';
+const getUserId = (request, requireAuth) => utilGetUserId(request, SECRET, requireAuth);
+
 const Subscription = {
     comment: {
         subscribe(parent, { postID }, { prisma }, info) {
             return prisma.subscription.comment({
                 where: { node: { post: { id: postID } } }
+            }, info);
+        }
+    },
+    myPost: {
+        subscribe(parent, args, { prisma, request }, info) {
+            const userId = getUserId(request);
+            if (!userId) {
+                throw new Error('not authorized');
+            }
+
+            return prisma.subscription.post({
+                where: { node: { author: { id: userId } } }
             }, info);
         }
     },
@@ -12,7 +29,7 @@ const Subscription = {
                 where: { node: { published: true } }
             }, info);
         }
-    }
+    },
 };
 
 export { Subscription as default };
