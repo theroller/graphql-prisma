@@ -46,7 +46,6 @@ const Mutation = {
     async deletePost(parent, { id }, { prisma, request }, info) {
         const userId = getUserId(request);
         const postExists = await prisma.exists.Post({ id, author: { id: userId } });
-
         if (!postExists) {
             throw new Error('unable to delete post');
         }
@@ -54,8 +53,8 @@ const Mutation = {
         return prisma.mutation.deletePost({ where: { id } }, info);
     },
     deleteUser(parent, args, { prisma, request }, info) {
-        const id = getUserId(request);
-        return prisma.mutation.deleteUser({ where: { id } }, info);
+        const userId = getUserId(request);
+        return prisma.mutation.deleteUser({ where: { id: userId } }, info);
     },
     async login(parent, { data }, { prisma }) {
         const user = await prisma.query.user({ where: { email: data.email } });
@@ -76,12 +75,18 @@ const Mutation = {
     updateComment(parent, { id, data }, { prisma }, info) {
         return prisma.mutation.updateComment({ where: { id }, data }, info);
     },
-    updatePost(parent, { id, data }, { prisma }, info) {
+    async updatePost(parent, { id, data }, { prisma, request }, info) {
+        const userId = getUserId(request);
+        const postExists = await prisma.exists.Post({ id, author: { id: userId } });
+        if (!postExists) {
+            throw new Error('unable to update post');
+        }
+
         return prisma.mutation.updatePost({ where: { id }, data }, info);
     },
     updateUser(parent, { data }, { prisma, request }, info) {
-        const id = getUserId(request);
-        return prisma.mutation.updateUser({ where: { id }, data }, info);
+        const userId = getUserId(request);
+        return prisma.mutation.updateUser({ where: { id: userId }, data }, info);
     },
 };
 
