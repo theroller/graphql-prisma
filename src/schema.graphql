@@ -12,11 +12,11 @@ type Mutation {
     createUser(data: CreateUserInput!): AuthPayload!
     deleteComment(id: ID!): Comment!
     deletePost(id: ID!): Post!
-    deleteUser(id: ID!): User!
+    deleteUser: User!
     login(data: LoginUserInput!): AuthPayload!
     updateComment(id: ID!, data: UpdateCommentInput!): Comment!
     updatePost(id: ID!, data: UpdatePostInput!): Post!
-    updateUser(id: ID!, data: UpdateUserInput!): User!
+    updateUser(data: UpdateUserInput!): User!
 }
 
 type Subscription {
