@@ -1,9 +1,7 @@
 import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
 import utilGetUserId from '../utils/getUserId';
+import generateToken, { SECRET } from '../utils/generateToken';
 
-const SECRET = 'secret1234';
-const TOKEN_EXPIRATION = '1day';
 const getUserId = (request) => utilGetUserId(request, SECRET);
 
 const Mutation = {
@@ -45,7 +43,7 @@ const Mutation = {
 
         return {
             user,
-            token: jwt.sign({ userId: user.id }, SECRET, { expiresIn: TOKEN_EXPIRATION })
+            token: generateToken(user.id)
         };
     },
     async deleteComment(parent, { id }, { prisma, request }, info) {
@@ -83,7 +81,7 @@ const Mutation = {
 
         return {
             user,
-            token: jwt.sign({ userId: user.id }, SECRET, { expiresIn: TOKEN_EXPIRATION })
+            token: generateToken(user.id)
         };
     },
     async updateComment(parent, { id, data }, { prisma, request }, info) {
