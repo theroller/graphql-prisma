@@ -1,6 +1,8 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
+const SECRET = 'secret1234';
+
 const Mutation = {
     createComment(parent, { data }, { prisma }, info) {
         return prisma.mutation.createComment({ data: {
@@ -31,7 +33,7 @@ const Mutation = {
 
         return {
             user,
-            token: jwt.sign({ userId: user.id }, 'secret1234')
+            token: jwt.sign({ userId: user.id }, SECRET)
         };
     },
     deleteComment(parent, { id }, { prisma }, info) {
@@ -42,6 +44,22 @@ const Mutation = {
     },
     deleteUser(parent, { id }, { prisma }, info) {
         return prisma.mutation.deleteUser({ where: { id } }, info);
+    },
+    async login(parent, { data }, { prisma }) {
+        const user = await prisma.query.user({ where: { email: data.email } });
+        if (!user) {
+            throw new Error('login failed');
+        }
+
+        const isMatch = await bcrypt.compare(data.password, user.password);
+        if (!isMatch) {
+            throw new Error('login failed');
+        }
+
+        return {
+            user,
+            token: jwt.sign({ userId: user.id }, SECRET)
+        };
     },
     updateComment(parent, { id, data }, { prisma }, info) {
         return prisma.mutation.updateComment({ where: { id }, data }, info);
