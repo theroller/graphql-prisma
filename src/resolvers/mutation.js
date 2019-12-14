@@ -42,7 +42,13 @@ const Mutation = {
             token: jwt.sign({ userId: user.id }, SECRET)
         };
     },
-    deleteComment(parent, { id }, { prisma }, info) {
+    async deleteComment(parent, { id }, { prisma, request }, info) {
+        const userId = getUserId(request);
+        const commentExists = await prisma.exists.Comment({ id, author: { id: userId } });
+        if (!commentExists) {
+            throw new Error('unable to delete comment');
+        }
+
         return prisma.mutation.deleteComment({ where: { id } }, info);
     },
     async deletePost(parent, { id }, { prisma, request }, info) {
@@ -74,7 +80,13 @@ const Mutation = {
             token: jwt.sign({ userId: user.id }, SECRET)
         };
     },
-    updateComment(parent, { id, data }, { prisma }, info) {
+    async updateComment(parent, { id, data }, { prisma, request }, info) {
+        const userId = getUserId(request);
+        const commentExists = await prisma.exists.Comment({ id, author: { id: userId } });
+        if (!commentExists) {
+            throw new Error('unable to update comment');
+        }
+
         return prisma.mutation.updateComment({ where: { id }, data }, info);
     },
     async updatePost(parent, { id, data }, { prisma, request }, info) {
