@@ -6,8 +6,13 @@ const SECRET = 'secret1234';
 const getUserId = (request) => utilGetUserId(request, SECRET);
 
 const Mutation = {
-    createComment(parent, { data }, { prisma, request }, info) {
+    async createComment(parent, { data }, { prisma, request }, info) {
         const userId = getUserId(request);
+
+        const postExists = await prisma.exists.Post({ id: data.post, published: true });
+        if (!postExists) {
+            throw new Error('unable to create comment on unpublished post');
+        }
 
         return prisma.mutation.createComment({ data: {
             text: data.text,
