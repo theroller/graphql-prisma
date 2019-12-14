@@ -1,7 +1,9 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import utilGetUserId from '../utils/getUserId';
 
 const SECRET = 'secret1234';
+const getUserId = (request) => utilGetUserId(request, SECRET);
 
 const Mutation = {
     createComment(parent, { data }, { prisma }, info) {
@@ -11,12 +13,14 @@ const Mutation = {
             post: { connect: { id: data.post } },
         } }, info);
     },
-    createPost(parent, { data }, { prisma }, info) {
+    createPost(parent, { data }, { prisma, request }, info) {
+        const userId = getUserId(request);
+
         return prisma.mutation.createPost({ data: {
             title: data.title,
             body: data.body,
             published: data.published,
-            author: { connect: { id: data.author } }
+            author: { connect: { id: userId } }
         } }, info);
     },
     async createUser(parent, { data }, { prisma }) {

@@ -12,10 +12,13 @@ import prisma from './prisma';
 const pubsub = new PubSub();
 
 const server = new GraphQLServer({
-    context: {
-        db,
-        prisma,
-        pubsub,
+    context(request) {
+        return {
+            db,
+            pubsub,
+            prisma,
+            request,
+        };
     },
     typeDefs: './src/schema.graphql',
     resolvers: {
