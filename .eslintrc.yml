@@ -25,6 +25,8 @@ rules:
     - single
   require-await:
     - warn
+  require-atomic-updates:
+    - off
   semi:
     - error
     - always
