@@ -6,6 +6,7 @@
   "scripts": {
     "debug": "node -r esm --nolazy --inspect-brk=9229 src/index.js",
     "get-schema": "graphql get-schema -p prisma",
+    "lint": "eslint src",
     "start": "nodemon src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
