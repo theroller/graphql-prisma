@@ -60,7 +60,10 @@ const Query = {
         return prisma.query.posts(opArgs, info);
     },
     users(parent, args, { prisma }, info) {
-        const opArgs = {};
+        const opArgs = {
+            first: args.first,
+            skip: args.skip,
+        };
         if (args.query) {
             opArgs.where = {
                 OR: [
