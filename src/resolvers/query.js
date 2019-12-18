@@ -5,7 +5,12 @@ const getUserId = (request, requireAuth) => utilGetUserId(request, SECRET, requi
 
 const Query = {
     comments(parent, args, { prisma }, info) {
-        return prisma.query.comments(null, info);
+        const opArgs = {
+            after: args.after,
+            first: args.first,
+            skip: args.skip,
+        };
+        return prisma.query.comments(opArgs, info);
     },
     me(parent, args, { prisma, request }, info) {
         const userId = getUserId(request);
@@ -15,6 +20,9 @@ const Query = {
         const userId = getUserId(request);
 
         const opArgs = {
+            after: args.after,
+            first: args.first,
+            skip: args.skip,
             where: { author: { id: userId } }
         };
         if (args.query) {
