@@ -3,7 +3,7 @@ type Query {
     me: User!
     myPosts(query: String): [Post!]!
     post(id: ID!): Post!
-    posts(query: String): [Post!]!
+    posts(query: String, first: Int, skip: Int): [Post!]!
     users(query: String, first: Int, skip: Int): [User!]!
 }
 
