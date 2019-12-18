@@ -48,6 +48,7 @@ const Query = {
     },
     posts(parent, args, { prisma }, info) {
         const opArgs = {
+            after: args.after,
             first: args.first,
             skip: args.skip,
             where: { published: true },
@@ -63,6 +64,7 @@ const Query = {
     },
     users(parent, args, { prisma }, info) {
         const opArgs = {
+            after: args.after,
             first: args.first,
             skip: args.skip,
         };
