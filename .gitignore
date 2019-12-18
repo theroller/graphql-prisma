@@ -1,6 +1,6 @@
 ~*
 *.log
-.env*
+*.env
 !.env.j2
 *.orig
 *.tgz
