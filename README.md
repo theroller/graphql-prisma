@@ -19,6 +19,7 @@ The requirement for a .env file is controlled by DOTENV_CONFIG_PATH. When this v
 
 |Variable|Description|Example|
 |-|-|-|
+|JWT_SECRET||secret|
 |POSTGRES_DB||abcdefg|
 |POSTGRES_HOST||abc.compute-1.amazonaws.com|
 |POSTGRES_PASSWORD||secret|
