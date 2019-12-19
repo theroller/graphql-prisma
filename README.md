@@ -35,3 +35,17 @@ Set this file to run `npm run start:dev`.
 
 ## config/prode.env
 Set this file to run `npm start`.
+
+## Heroku Setup
+```bash
+heroku login
+heroku create
+heroku config:set NODE_ENV=production
+heroku config:set PRISMA_ENDPOINT=https://...
+heroku config:set PRISMA_SERVICE_SECRET=super-secret
+
+# production
+git push heroku master
+# development (on branch dev here)
+git push heroku dev:master
+```
