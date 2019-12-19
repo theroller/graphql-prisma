@@ -7,7 +7,7 @@
     "debug": "cross-env DOTENV_CONFIG_PATH=config/dev.env node -r esm --nolazy --inspect-brk=9229 src/index.js",
     "get-schema": "graphql get-schema -p prisma",
     "lint": "eslint src",
-    "start": "cross-env DOTENV_CONFIG_PATH=config/prod.env node -r esm src/index.js",
+    "start": "node -r esm src/index.js",
     "start:dev": "cross-env DOTENV_CONFIG_PATH=config/dev.env nodemon src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
