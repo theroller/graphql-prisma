@@ -54,3 +54,6 @@ git push heroku master
 # development (on branch dev here)
 git push heroku dev:master
 ```
+
+## docker-compose
+Local environment file must be named `.env`. The env_file and environment values in docker-compose.yml are for setting variables in the container.
