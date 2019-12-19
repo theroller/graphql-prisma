@@ -2,7 +2,7 @@ import { Prisma } from 'prisma-binding';
 import { fragmentReplacements } from './resolvers';
 
 const prisma = new Prisma({
-    endpoint: 'http://localhost:4466',
+    endpoint: process.env.PRISMA_ENDPOINT,
     fragmentReplacements,
     secret: process.env.PRISMA_SERVICE_SECRET,
     typeDefs: 'src/generated/prisma.graphql',

@@ -8,6 +8,7 @@
 **/temp/
 .nyc_output/
 build/
+config/
 coverage/
 logs/
 node_modules/

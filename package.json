@@ -4,10 +4,11 @@
   "description": "",
   "main": "src/index.js",
   "scripts": {
-    "debug": "node -r esm --nolazy --inspect-brk=9229 src/index.js",
+    "debug": "cross-env DOTENV_CONFIG_PATH=config/dev.env node -r esm --nolazy --inspect-brk=9229 src/index.js",
     "get-schema": "graphql get-schema -p prisma",
     "lint": "eslint src",
-    "start": "nodemon src/index.js",
+    "start": "cross-env DOTENV_CONFIG_PATH=config/prod.env node -r esm src/index.js",
+    "start:dev": "cross-env DOTENV_CONFIG_PATH=config/dev.env nodemon src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -15,6 +16,8 @@
   "dependencies": {
     "babel-eslint": "^10.0.3",
     "bcrypt": "^3.0.7",
+    "cross-env": "^6.0.3",
+    "dotenv": "^8.2.0",
     "eslint": "^6.7.2",
     "esm": "^3.2.25",
     "graphql-cli": "^3.0.14",

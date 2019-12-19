@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import { GraphQLServer, PubSub } from 'graphql-yoga';
 
 import db from './db';
@@ -20,6 +21,9 @@ const server = new GraphQLServer({
     typeDefs: './src/schema.graphql',
 });
 
-server.start(() => {
-    console.log('server is up');
+const serverConfig = {
+    port: process.env.PORT || 4000,
+};
+server.start(serverConfig, () => {
+    console.log(`server is up on port ${serverConfig.port}`);
 });
