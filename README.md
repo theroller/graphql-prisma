@@ -20,30 +20,34 @@ The requirement for a .env file is controlled by DOTENV_CONFIG_PATH. When this v
 |Variable|Description|Example|
 |-|-|-|
 |JWT_SECRET||secret|
+|PRISMA_ENDPOINT||http://localhost:4466|
+|PRISMA_SERVICE_SECRET||secret|
+
+## config/dev.env
+Set this file to run `npm run start:dev`.
+
+## config/prod.env
+Set this file to run `npm start`.
+
+## Heroku Setup
+The following variables are used by docker-compose and can be put in a dotenv file (e.g. dev-primsa.env).
+
+|Variable|Description|Example|
+|-|-|-|
 |POSTGRES_DB||abcdefg|
 |POSTGRES_HOST||abc.compute-1.amazonaws.com|
 |POSTGRES_PASSWORD||secret|
 |POSTGRES_PORT||5432|
 |POSTGRES_USER||someone|
-|PRISMA_ENDPOINT||http://localhost:4466|
 |PRISMA_MANAGEMENT_API_SECRET||secret|
-|PRISMA_SERVICE_SECRET||secret|
 
-The `POSTGRES_` variables are used to configure the docker container for prisma.
-
-## config/dev.env
-Set this file to run `npm run start:dev`.
-
-## config/prode.env
-Set this file to run `npm start`.
-
-## Heroku Setup
 ```bash
 heroku login
 heroku create
 heroku config:set NODE_ENV=production
 heroku config:set PRISMA_ENDPOINT=https://...
 heroku config:set PRISMA_SERVICE_SECRET=super-secret
+heroku config:set JWT_SECRET=super-secret
 
 # production
 git push heroku master
