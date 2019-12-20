@@ -1,5 +1,5 @@
-import utilGetUserId from '../utils/getUserId';
-import { SECRET } from '../utils/generateToken';
+const utilGetUserId = require('../utils/getUserId');
+const { SECRET } = require('../utils/generateToken');
 
 const getUserId = (request, requireAuth) => utilGetUserId(request, SECRET, requireAuth);
 
@@ -32,4 +32,4 @@ const Subscription = {
     },
 };
 
-export { Subscription as default };
+module.exports = Subscription;

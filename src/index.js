@@ -1,9 +1,9 @@
-import './env';
-import { GraphQLServer, PubSub } from 'graphql-yoga';
+require('./env');
+const { GraphQLServer, PubSub } = require('graphql-yoga');
 
-import db from './db';
-import { fragmentReplacements, resolvers } from './resolvers';
-import prisma from './prisma';
+const db = require('./db');
+const { fragmentReplacements, resolvers } = require('./resolvers');
+const prisma = require('./prisma');
 
 const pubsub = new PubSub();
 

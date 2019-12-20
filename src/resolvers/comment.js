@@ -1,4 +1,4 @@
 const Comment = {
 };
 
-export { Comment as default };
+module.exports = Comment;

@@ -1,7 +1,8 @@
-import bcrypt from 'bcrypt';
-import utilGetUserId from '../utils/getUserId';
-import generateToken, { SECRET } from '../utils/generateToken';
-import hashPassword from '../utils/hashPassword';
+const bcrypt = require('bcrypt');
+const utilGetUserId = require('../utils/getUserId');
+const generateToken = require('../utils/generateToken');
+const { SECRET } = generateToken;
+const hashPassword = require('../utils/hashPassword');
 
 const getUserId = (request) => utilGetUserId(request, SECRET);
 
@@ -114,4 +115,4 @@ const Mutation = {
     },
 };
 
-export { Mutation as default };
+module.exports = Mutation;

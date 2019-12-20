@@ -1,4 +1,4 @@
-import jwt from 'jsonwebtoken';
+const jwt = require('jsonwebtoken');
 
 function getUserId(request, secret, requireAuth = true) {
     const header = request.request ?
@@ -18,4 +18,4 @@ function getUserId(request, secret, requireAuth = true) {
     return null;
 }
 
-export { getUserId as default };
+module.exports = getUserId;

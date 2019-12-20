@@ -23,4 +23,4 @@ const db = {
     posts,
 };
 
-export { db as default };
+module.exports = db;
