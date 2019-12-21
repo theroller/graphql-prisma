@@ -1,6 +1,7 @@
 require('cross-fetch/polyfill');
 
 const { default: ApolloBoost, gql } = require('apollo-boost');
+const bcrypt = require('bcrypt');
 const prisma = require('../src/prisma');
 
 const client = new ApolloBoost({
@@ -8,7 +9,31 @@ const client = new ApolloBoost({
 });
 
 beforeEach(async() => {
+    await prisma.mutation.deleteManyPosts();
     await prisma.mutation.deleteManyUsers();
+    const user = await prisma.mutation.createUser({
+        data: {
+            name: 'Jen',
+            email: 'jen@example.com',
+            password: bcrypt.hashSync('Blue0893!,.#', 10),
+        }
+    });
+    await prisma.mutation.createPost({
+        data: {
+            author: { connect: { id: user.id } },
+            title: 'My Published Works!',
+            body: 'Lorem ipsum.',
+            published: true,
+        }
+    });
+    await prisma.mutation.createPost({
+        data: {
+            author: { connect: { id: user.id } },
+            title: 'In Draft',
+            body: 'TBD',
+            published: false,
+        }
+    });
 });
 
 test('should create a new user', async(done) => {
