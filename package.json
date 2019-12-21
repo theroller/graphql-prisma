@@ -6,10 +6,10 @@
   "scripts": {
     "debug": "cross-env DOTENV_CONFIG_PATH=config/dev.env node --nolazy --inspect-brk=9229 src/index.js",
     "get-schema": "graphql get-schema -p prisma --dotenv config/dev.env",
-    "lint": "eslint src",
+    "lint": "eslint src tests",
     "start": "node src/index.js",
     "start:dev": "cross-env DOTENV_CONFIG_PATH=config/dev.env nodemon src/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "keywords": [],
   "author": "James Roller, Jr. <og.readmore@gmail.com>",
@@ -26,6 +26,7 @@
     "prisma-binding": "^2.3.16"
   },
   "devDependencies": {
+    "jest": "^24.9.0",
     "nodemon": "^2.0.1"
   },
   "nodemonConfig": {
