@@ -132,3 +132,20 @@ describe('login', () => {
         expect(response.data.login.user.name).toBe('Jen');
     });
 });
+
+describe('createUser', () => {
+    test('should fail with short password', async() => {
+        const createUser = gql`
+            mutation {
+                createUser(data: {
+                    name: "keanu",
+                    email: "keanu@example.com",
+                    password: "1234567"
+                }){
+                    id
+                }
+            }
+        `;
+        await expect(client.mutate({ mutation: createUser })).rejects.toThrow();
+    });
+});
