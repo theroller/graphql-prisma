@@ -2,7 +2,7 @@ require('cross-fetch/polyfill');
 
 const { gql } = require('apollo-boost');
 const getClient = require('./utils/getClient');
-const seedDatabase = require('./utils/seedDatabase');
+const { seedDatabase } = require('./utils/seedDatabase');
 
 const client = getClient();
 

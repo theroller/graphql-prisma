@@ -3,7 +3,7 @@ require('cross-fetch/polyfill');
 const { gql } = require('apollo-boost');
 const getClient = require('./utils/getClient');
 const prisma = require('../src/prisma');
-const seedDatabase = require('./utils/seedDatabase');
+const { seedDatabase, userOne } = require('./utils/seedDatabase');
 
 const client = getClient();
 
@@ -65,5 +65,21 @@ describe('createUser', () => {
             }
         `;
         await expect(client.mutate({ mutation: createUser })).rejects.toThrow();
+    });
+});
+
+describe('getProfile', () => {
+    test('should fetch user profile', async() => {
+        const client = getClient(userOne.jwt);
+        const getProfile = gql`
+        query {
+            me {
+                id
+                name
+                email
+            }
+        }
+    `;
+        await client.query({ query: getProfile });
     });
 });
