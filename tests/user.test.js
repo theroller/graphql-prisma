@@ -3,7 +3,7 @@ require('cross-fetch/polyfill');
 const getClient = require('./utils/getClient');
 const ops = require('./utils/operations');
 const prisma = require('../src/prisma');
-const { seedDatabase, userOne } = require('./utils/seedDatabase');
+const { seedDatabase, users } = require('./utils/seedDatabase');
 
 const client = getClient();
 
@@ -49,7 +49,7 @@ describe('createUser', () => {
 
 describe('getProfile', () => {
     test('should fetch user profile', async() => {
-        const client = getClient(userOne.jwt);
+        const client = getClient(users[0].jwt);
         await client.query({ query: ops.me });
     });
 });

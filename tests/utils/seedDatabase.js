@@ -4,15 +4,17 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const prisma = require('../../src/prisma');
 
-const userOne = {
-    input: {
-        name: 'Jen',
-        email: 'jen@example.com',
-        password: bcrypt.hashSync('P@ssword!1234', 10),
+const users = [
+    {
+        input: {
+            name: 'Jen',
+            email: 'jen@example.com',
+            password: bcrypt.hashSync('P@ssword!1234', 10),
+        },
+        user: undefined,
+        jwt: undefined,
     },
-    user: undefined,
-    jwt: undefined,
-};
+];
 
 const posts = [
     {
@@ -34,20 +36,21 @@ const posts = [
 
 async function seedDatabase() {
     // delete test data
+    await prisma.mutation.deleteManyComments();
     await prisma.mutation.deleteManyPosts();
     await prisma.mutation.deleteManyUsers();
 
     // create user one
-    userOne.user = await prisma.mutation.createUser({
-        data: userOne.input
+    users[0].user = await prisma.mutation.createUser({
+        data: users[0].input
     });
-    userOne.jwt = jwt.sign({ userId: userOne.user.id }, process.env.JWT_SECRET);
+    users[0].jwt = jwt.sign({ userId: users[0].user.id }, process.env.JWT_SECRET);
 
     // create post one
     posts[0].post = await prisma.mutation.createPost({
         data: {
             ...posts[0].input,
-            author: { connect: { id: userOne.user.id } },
+            author: { connect: { id: users[0].user.id } },
         }
     });
 
@@ -55,11 +58,11 @@ async function seedDatabase() {
     posts[1].post = await prisma.mutation.createPost({
         data: {
             ...posts[1].input,
-            author: { connect: { id: userOne.user.id } },
+            author: { connect: { id: users[0].user.id } },
         }
     });
 }
 
 module.exports.seedDatabase = seedDatabase;
 module.exports.posts = posts;
-module.exports.userOne = userOne;
+module.exports.users = users;

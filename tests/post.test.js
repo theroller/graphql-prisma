@@ -1,10 +1,9 @@
 require('cross-fetch/polyfill');
 
-const { gql } = require('apollo-boost');
 const getClient = require('./utils/getClient');
 const ops = require('./utils/operations');
 const prisma = require('../src/prisma');
-const { seedDatabase, posts, userOne } = require('./utils/seedDatabase');
+const { seedDatabase, posts, users } = require('./utils/seedDatabase');
 
 const client = getClient();
 
@@ -22,7 +21,7 @@ describe('getPosts', () => {
 
 describe('myPosts', () => {
     test('should return all posts when authenticated', async() => {
-        const client = getClient(userOne.jwt);
+        const client = getClient(users[0].jwt);
         const { data } = await client.query({ query: ops.myPosts });
         expect(data.myPosts.length).toBe(2);
     });
@@ -30,7 +29,7 @@ describe('myPosts', () => {
 
 describe('updatePost', () => {
     test('should be able to update own post', async() => {
-        const client = getClient(userOne.jwt);
+        const client = getClient(users[0].jwt);
         const variables = {
             id: posts[0].post.id,
             data: {
@@ -47,7 +46,7 @@ describe('updatePost', () => {
 
 describe('createPost', () => {
     test('should be able to create a post', async() => {
-        const client = getClient(userOne.jwt);
+        const client = getClient(users[0].jwt);
         const variables = {
             data: {
                 title: 'War and Peace',
@@ -64,7 +63,7 @@ describe('createPost', () => {
 
 describe('deletePost', () => {
     test('should be able to create a post', async() => {
-        const client = getClient(userOne.jwt);
+        const client = getClient(users[0].jwt);
         const variables = {
             id: posts[1].post.id
         };
