@@ -2,36 +2,17 @@ require('cross-fetch/polyfill');
 
 const { gql } = require('apollo-boost');
 const getClient = require('./utils/getClient');
+const ops = require('./utils/operations');
 const prisma = require('../src/prisma');
 const { seedDatabase, posts, userOne } = require('./utils/seedDatabase');
 
 const client = getClient();
-const myPostsGQL = gql`
-    query {
-        myPosts {
-            id
-            title
-            body
-            published
-        }
-    }
-`;
-const postsGQL = gql`
-    query {
-        posts {
-            id
-            title
-            body
-            published
-        }
-    }
-`;
 
 beforeEach(seedDatabase);
 
 describe('getPosts', () => {
     test('should expose published posts', async() => {
-        const { data } = await client.query({ query: postsGQL });
+        const { data } = await client.query({ query: ops.posts });
         expect(data.posts.length).toBe(1);
         expect(data.posts[0].published).toBe(true);
         expect(data.posts[0].title).toBe('My Published Works!');
@@ -42,7 +23,7 @@ describe('getPosts', () => {
 describe('myPosts', () => {
     test('should return all posts when authenticated', async() => {
         const client = getClient(userOne.jwt);
-        const { data } = await client.query({ query: myPostsGQL });
+        const { data } = await client.query({ query: ops.myPosts });
         expect(data.myPosts.length).toBe(2);
     });
 });

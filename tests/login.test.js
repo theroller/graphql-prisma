@@ -1,20 +1,10 @@
 require('cross-fetch/polyfill');
 
-const { gql } = require('apollo-boost');
 const getClient = require('./utils/getClient');
+const ops = require('./utils/operations');
 const { seedDatabase } = require('./utils/seedDatabase');
 
 const client = getClient();
-const loginGQL = gql`
-    mutation($data: LoginUserInput!) {
-        login(data: $data){
-            token
-            user {
-                name
-            }
-        }
-    }
-`;
 
 beforeEach(seedDatabase);
 
@@ -27,7 +17,7 @@ describe('login', () => {
                 password: 'dudu1234',
             }
         };
-        await expect(client.mutate({ mutation: loginGQL, variables })).rejects.toThrow();
+        await expect(client.mutate({ mutation: ops.login, variables })).rejects.toThrow();
     });
 
     test('should login with good credentials', async () => {
@@ -37,7 +27,7 @@ describe('login', () => {
                 password: 'P@ssword!1234',
             }
         };
-        const response = await client.mutate({ mutation: loginGQL, variables });
+        const response = await client.mutate({ mutation: ops.login, variables });
         expect(response.data.login.user.name).toBe('Jen');
     });
 });
