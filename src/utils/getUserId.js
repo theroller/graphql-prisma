@@ -2,8 +2,8 @@ const jwt = require('jsonwebtoken');
 
 function getUserId(request, secret, requireAuth = true) {
     const header = request.request ?
-        request.request.headers.authentication :
-        request.connection.context.Authentication;
+        request.request.headers.authorization :
+        request.connection.context.Authorization;
 
     if (header) {
         const token = header.split(/\s+/)[1];
@@ -12,7 +12,7 @@ function getUserId(request, secret, requireAuth = true) {
     }
 
     if (requireAuth) {
-        throw new Error('Authentication required');
+        throw new Error('Authorization required');
     }
 
     return null;
