@@ -2,7 +2,7 @@ require('cross-fetch/polyfill');
 
 const { gql } = require('apollo-boost');
 const getClient = require('./utils/getClient');
-const { seedDatabase } = require('./utils/seedDatabase');
+const { seedDatabase, userOne } = require('./utils/seedDatabase');
 
 const client = getClient();
 
@@ -21,10 +21,28 @@ describe('getPosts', () => {
              }
         }
     `;
-        const response = await client.query({ query: getPosts });
-        expect(response.data.posts.length).toBe(1);
-        expect(response.data.posts[0].published).toBe(true);
-        expect(response.data.posts[0].title).toBe('My Published Works!');
-        expect(response.data.posts[0].body).toBe('Lorem ipsum.');
+        const { data } = await client.query({ query: getPosts });
+        expect(data.posts.length).toBe(1);
+        expect(data.posts[0].published).toBe(true);
+        expect(data.posts[0].title).toBe('My Published Works!');
+        expect(data.posts[0].body).toBe('Lorem ipsum.');
+    });
+});
+
+describe('myPosts', () => {
+    test('should return all posts when authenticated', async() => {
+        const client = getClient(userOne.jwt);
+        const myPosts = gql`
+            query {
+                myPosts {
+                    id
+                    title
+                    body
+                    published
+                }
+            }
+        `;
+        const { data } = await client.query({ query: myPosts });
+        expect(data.myPosts.length).toBe(2);
     });
 });
