@@ -11,7 +11,7 @@ beforeEach(seedDatabase);
 describe('login', () => {
 
     test('should not login with bad credentials', async () => {
-        const login = gql`
+        const mutation = gql`
             mutation {
                 login(
                     data: {
@@ -23,11 +23,11 @@ describe('login', () => {
                 }
             }
         `;
-        await expect(client.mutate({ mutation: login })).rejects.toThrow();
+        await expect(client.mutate({ mutation })).rejects.toThrow();
     });
 
     test('should login with good credentials', async () => {
-        const login = gql`
+        const mutation = gql`
             mutation {
                 login(
                     data: {
@@ -42,7 +42,7 @@ describe('login', () => {
                 }
             }
         `;
-        const response = await client.mutate({ mutation: login });
+        const response = await client.mutate({ mutation });
         expect(response.data.login.user.name).toBe('Jen');
     });
 });

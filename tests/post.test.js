@@ -12,17 +12,17 @@ beforeEach(seedDatabase);
 describe('getPosts', () => {
 
     test('should expose published posts', async() => {
-        const getPosts = gql`
-        query {
-            posts {
-                id
-                title
-                body
-                published
-             }
-        }
-    `;
-        const { data } = await client.query({ query: getPosts });
+        const query = gql`
+            query {
+                posts {
+                    id
+                    title
+                    body
+                    published
+                }
+            }
+        `;
+        const { data } = await client.query({ query });
         expect(data.posts.length).toBe(1);
         expect(data.posts[0].published).toBe(true);
         expect(data.posts[0].title).toBe('My Published Works!');
@@ -33,7 +33,7 @@ describe('getPosts', () => {
 describe('myPosts', () => {
     test('should return all posts when authenticated', async() => {
         const client = getClient(userOne.jwt);
-        const myPosts = gql`
+        const query = gql`
             query {
                 myPosts {
                     id
@@ -43,7 +43,7 @@ describe('myPosts', () => {
                 }
             }
         `;
-        const { data } = await client.query({ query: myPosts });
+        const { data } = await client.query({ query });
         expect(data.myPosts.length).toBe(2);
     });
 });
@@ -51,7 +51,7 @@ describe('myPosts', () => {
 describe('updatePost', () => {
     test('should be able to update own post', async() => {
         const client = getClient(userOne.jwt);
-        const updatePost = gql`
+        const mutation = gql`
             mutation {
                 updatePost(
                     id: "${posts[0].post.id}",
@@ -66,7 +66,7 @@ describe('updatePost', () => {
                 }
             }
         `;
-        const { data } = await client.mutate({ mutation: updatePost });
+        const { data } = await client.mutate({ mutation });
         expect(data.updatePost.published).toBe(false);
 
         const exists = await prisma.exists.Post({ id: posts[0].post.id, published: false });
