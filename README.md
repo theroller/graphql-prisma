@@ -57,3 +57,13 @@ git push heroku dev:master
 
 ## docker-compose
 Local environment file must be named `.env`. The env_file and environment values in docker-compose.yml are for setting variables in the container.
+
+## token
+In order to generate a token, the .env file from the config directory must be used.
+
+```bash
+cd prisma
+
+# example using development environment
+prisma token -e ../config/dev.env
+```
