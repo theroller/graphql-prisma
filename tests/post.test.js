@@ -6,23 +6,32 @@ const prisma = require('../src/prisma');
 const { seedDatabase, posts, userOne } = require('./utils/seedDatabase');
 
 const client = getClient();
+const myPostsGQL = gql`
+    query {
+        myPosts {
+            id
+            title
+            body
+            published
+        }
+    }
+`;
+const postsGQL = gql`
+    query {
+        posts {
+            id
+            title
+            body
+            published
+        }
+    }
+`;
 
 beforeEach(seedDatabase);
 
 describe('getPosts', () => {
-
     test('should expose published posts', async() => {
-        const query = gql`
-            query {
-                posts {
-                    id
-                    title
-                    body
-                    published
-                }
-            }
-        `;
-        const { data } = await client.query({ query });
+        const { data } = await client.query({ query: postsGQL });
         expect(data.posts.length).toBe(1);
         expect(data.posts[0].published).toBe(true);
         expect(data.posts[0].title).toBe('My Published Works!');
@@ -33,17 +42,7 @@ describe('getPosts', () => {
 describe('myPosts', () => {
     test('should return all posts when authenticated', async() => {
         const client = getClient(userOne.jwt);
-        const query = gql`
-            query {
-                myPosts {
-                    id
-                    title
-                    body
-                    published
-                }
-            }
-        `;
-        const { data } = await client.query({ query });
+        const { data } = await client.query({ query: myPostsGQL });
         expect(data.myPosts.length).toBe(2);
     });
 });

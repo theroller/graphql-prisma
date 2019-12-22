@@ -5,44 +5,39 @@ const getClient = require('./utils/getClient');
 const { seedDatabase } = require('./utils/seedDatabase');
 
 const client = getClient();
+const loginGQL = gql`
+    mutation($data: LoginUserInput!) {
+        login(data: $data){
+            token
+            user {
+                name
+            }
+        }
+    }
+`;
 
 beforeEach(seedDatabase);
 
 describe('login', () => {
 
     test('should not login with bad credentials', async () => {
-        const mutation = gql`
-            mutation {
-                login(
-                    data: {
-                        email: "jerk@example.com",
-                        password: "dudu1234",
-                    }
-                ){
-                    token
-                }
+        const variables = {
+            data: {
+                email: 'jerk@example.com',
+                password: 'dudu1234',
             }
-        `;
-        await expect(client.mutate({ mutation })).rejects.toThrow();
+        };
+        await expect(client.mutate({ mutation: loginGQL, variables })).rejects.toThrow();
     });
 
     test('should login with good credentials', async () => {
-        const mutation = gql`
-            mutation {
-                login(
-                    data: {
-                        email: "jen@example.com",
-                        password: "P@ssword!1234",
-                    }
-                ){
-                    token
-                    user {
-                        name
-                    }
-                }
+        const variables = {
+            data: {
+                email: 'jen@example.com',
+                password: 'P@ssword!1234',
             }
-        `;
-        const response = await client.mutate({ mutation });
+        };
+        const response = await client.mutate({ mutation: loginGQL, variables });
         expect(response.data.login.user.name).toBe('Jen');
     });
 });

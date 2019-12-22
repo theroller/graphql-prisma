@@ -6,22 +6,43 @@ const prisma = require('../src/prisma');
 const { seedDatabase, userOne } = require('./utils/seedDatabase');
 
 const client = getClient();
+const createUserGQL = gql`
+    mutation($data: CreateUserInput!) {
+        createUser(data: $data) {
+            token,
+            user {
+                id
+                name
+                email
+            }
+        }
+    }
+`;
+const getUsersGQL = gql`
+    query {
+        users {
+            id
+            name
+            email
+        }
+    }
+`;
+const meGQL = gql`
+    query {
+        me {
+            id
+            name
+            email
+        }
+    }
+`;
 
 beforeEach(seedDatabase);
 
 describe('getUsers', () => {
 
     test('should expose public author profiles', async() => {
-        const query = gql`
-            query {
-                users {
-                    id
-                    name
-                    email
-                }
-            }
-        `;
-        const response = await client.query({ query });
+        const response = await client.query({ query: getUsersGQL });
         expect(response.data.users.length).toBe(1);
         expect(response.data.users[0].email).toBe(null);
         expect(response.data.users[0].name).toBe('Jen');
@@ -31,55 +52,34 @@ describe('getUsers', () => {
 describe('createUser', () => {
 
     test('should create a new user', async(done) => {
-        const mutation = gql`
-            mutation {
-                createUser(data: {
-                    name: "James",
-                    email: "james@example.com",
-                    password: "pass1234"
-                }) {
-                    token,
-                    user {
-                        id
-                    }
-                }
+        const variables = {
+            data: {
+                name: 'Andrew',
+                email: 'andrew@example.com',
+                password: 'MyPass123'
             }
-        `;
-
-        const response = await client.mutate({ mutation });
+        };
+        const response = await client.mutate({ mutation: createUserGQL, variables });
         const exists = await prisma.exists.User({ id: response.data.createUser.user.id });
         expect(exists).toBe(true);
         done();
     });
 
     test('should fail with short password', async() => {
-        const mutation = gql`
-            mutation {
-                createUser(data: {
-                    name: "keanu",
-                    email: "keanu@example.com",
-                    password: "1234567"
-                }){
-                    id
-                }
+        const variables = {
+            data: {
+                name: 'Keanu',
+                email: 'keanu@example.com',
+                password: '1234567'
             }
-        `;
-        await expect(client.mutate({ mutation })).rejects.toThrow();
+        };
+        await expect( client.mutate({ mutation: createUserGQL, variables })).rejects.toThrow();
     });
 });
 
 describe('getProfile', () => {
     test('should fetch user profile', async() => {
         const client = getClient(userOne.jwt);
-        const query = gql`
-            query {
-                me {
-                    id
-                    name
-                    email
-                }
-            }
-        `;
-        await client.query({ query });
+        await client.query({ query: meGQL });
     });
 });
