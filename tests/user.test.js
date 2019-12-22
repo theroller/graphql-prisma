@@ -1,10 +1,10 @@
 require('cross-fetch/polyfill');
 
-const { default: ApolloBoost, gql } = require('apollo-boost');
+const { default: ApolloClient, gql } = require('apollo-boost');
 const bcrypt = require('bcrypt');
 const prisma = require('../src/prisma');
 
-const client = new ApolloBoost({
+const client = new ApolloClient({
     uri: `http://localhost:${process.env.PORT}`
 });
 
@@ -15,7 +15,7 @@ beforeEach(async() => {
         data: {
             name: 'Jen',
             email: 'jen@example.com',
-            password: bcrypt.hashSync('Blue0893!,.#', 10),
+            password: bcrypt.hashSync('P@ssword!1234', 10),
         }
     });
     await prisma.mutation.createPost({
@@ -74,8 +74,9 @@ test('should expose public author profiles', async() => {
     expect(response.data.users[0].name).toBe('Jen');
 });
 
-test('should expose published posts', async() => {
-    const getPosts = gql`
+describe('posts', () => {
+    test('should expose published posts', async() => {
+        const getPosts = gql`
         query {
             posts {
                 id
@@ -85,9 +86,49 @@ test('should expose published posts', async() => {
              }
         }
     `;
-    const response = await client.query({ query: getPosts });
-    expect(response.data.posts.length).toBe(1);
-    expect(response.data.posts[0].published).toBe(true);
-    expect(response.data.posts[0].title).toBe('My Published Works!');
-    expect(response.data.posts[0].body).toBe('Lorem ipsum.');
+        const response = await client.query({ query: getPosts });
+        expect(response.data.posts.length).toBe(1);
+        expect(response.data.posts[0].published).toBe(true);
+        expect(response.data.posts[0].title).toBe('My Published Works!');
+        expect(response.data.posts[0].body).toBe('Lorem ipsum.');
+    });
+});
+
+describe('login', () => {
+
+    test('should not login with bad credentials', async () => {
+        const login = gql`
+            mutation {
+                login(
+                    data: {
+                        email: "jerk@example.com",
+                        password: "dudu1234",
+                    }
+                ){
+                    token
+                }
+            }
+        `;
+        await expect(client.mutate({ mutation: login })).rejects.toThrow();
+    });
+
+    test('should login with good credentials', async () => {
+        const login = gql`
+            mutation {
+                login(
+                    data: {
+                        email: "jen@example.com",
+                        password: "P@ssword!1234",
+                    }
+                ){
+                    token
+                    user {
+                        name
+                    }
+                }
+            }
+        `;
+        const response = await client.mutate({ mutation: login });
+        expect(response.data.login.user.name).toBe('Jen');
+    });
 });
