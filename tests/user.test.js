@@ -1,10 +1,11 @@
 require('cross-fetch/polyfill');
 
-const { default: ApolloClient, gql } = require('apollo-boost');
+const { gql } = require('apollo-boost');
+const getClient = require('./utils/getClient');
 const prisma = require('../src/prisma');
 const seedDatabase = require('./utils/seedDatabase');
 
-const client = new ApolloClient({ uri: `http://localhost:${process.env.PORT}` });
+const client = getClient();
 
 beforeEach(seedDatabase);
 
