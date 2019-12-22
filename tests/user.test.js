@@ -13,7 +13,7 @@ describe('getUsers', () => {
 
     test('should expose public author profiles', async() => {
         const response = await client.query({ query: ops.getUsers });
-        expect(response.data.users.length).toBe(1);
+        expect(response.data.users.length).toBe(2);
         expect(response.data.users[0].email).toBe(null);
         expect(response.data.users[0].name).toBe('Jen');
     });
