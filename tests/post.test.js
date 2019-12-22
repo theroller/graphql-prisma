@@ -3,7 +3,7 @@ require('cross-fetch/polyfill');
 const { gql } = require('apollo-boost');
 const getClient = require('./utils/getClient');
 const prisma = require('../src/prisma');
-const { seedDatabase, postOne, userOne } = require('./utils/seedDatabase');
+const { seedDatabase, posts, userOne } = require('./utils/seedDatabase');
 
 const client = getClient();
 
@@ -54,7 +54,7 @@ describe('updatePost', () => {
         const updatePost = gql`
             mutation {
                 updatePost(
-                    id: "${postOne.post.id}",
+                    id: "${posts[0].post.id}",
                     data: {
                         published: false
                     }
@@ -69,7 +69,51 @@ describe('updatePost', () => {
         const { data } = await client.mutate({ mutation: updatePost });
         expect(data.updatePost.published).toBe(false);
 
-        const exists = await prisma.exists.Post({ id: postOne.post.id, published: false });
+        const exists = await prisma.exists.Post({ id: posts[0].post.id, published: false });
         expect(exists).toBe(true);
+    });
+});
+
+describe('createPost', () => {
+    test('should be able to create a post', async() => {
+        const client = getClient(userOne.jwt);
+        const mutation = gql`
+            mutation {
+                createPost(
+                    data: {
+                        title: "War and Peace",
+                        body: "???",
+                        published: true
+                    }
+                ) {
+                    id
+                    title
+                    body
+                    published
+                }
+            }
+        `;
+        const { data } = await client.mutate({ mutation });
+        expect(data.createPost.title).toBe('War and Peace');
+        expect(data.createPost.body).toBe('???');
+        expect(data.createPost.published).toBe(true);
+    });
+});
+
+describe('deletePost', () => {
+    test('should be able to create a post', async() => {
+        const client = getClient(userOne.jwt);
+        const mutation = gql`
+            mutation {
+                deletePost(
+                    id: "${posts[1].post.id}"
+                ) {
+                    id
+                }
+            }
+        `;
+        await client.mutate({ mutation });
+        const exists = await prisma.exists.Post({ id: posts[1].post.id });
+        expect(exists).toBe(false);
     });
 });

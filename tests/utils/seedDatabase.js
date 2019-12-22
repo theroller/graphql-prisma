@@ -14,14 +14,23 @@ const userOne = {
     jwt: undefined,
 };
 
-const postOne = {
-    input: {
-        title: 'My Published Works!',
-        body: 'Lorem ipsum.',
-        published: true,
-    },
-    post: undefined,
-};
+const posts = [
+    {
+        input: {
+            title: 'My Published Works!',
+            body: 'Lorem ipsum.',
+            published: true,
+        },
+        post: undefined,
+    },{
+        input: {
+            title: 'In Draft',
+            body: 'TBD',
+            published: false,
+        },
+        post: undefined,
+    }
+];
 
 async function seedDatabase() {
     // delete test data
@@ -35,24 +44,22 @@ async function seedDatabase() {
     userOne.jwt = jwt.sign({ userId: userOne.user.id }, process.env.JWT_SECRET);
 
     // create post one
-    postOne.post = await prisma.mutation.createPost({
+    posts[0].post = await prisma.mutation.createPost({
         data: {
-            ...postOne.input,
+            ...posts[0].input,
             author: { connect: { id: userOne.user.id } },
         }
     });
 
     // create post two
-    await prisma.mutation.createPost({
+    posts[1].post = await prisma.mutation.createPost({
         data: {
+            ...posts[1].input,
             author: { connect: { id: userOne.user.id } },
-            title: 'In Draft',
-            body: 'TBD',
-            published: false,
         }
     });
 }
 
 module.exports.seedDatabase = seedDatabase;
-module.exports.postOne = postOne;
+module.exports.posts = posts;
 module.exports.userOne = userOne;
