@@ -1,5 +1,15 @@
 const { gql } = require('apollo-boost');
 
+const createPost = gql`
+    mutation($data: CreatePostInput!) {
+        createPost(data: $data) {
+            id
+            title
+            body
+            published
+        }
+    }
+`;
 const createUser = gql`
     mutation($data: CreateUserInput!) {
         createUser(data: $data) {
@@ -9,6 +19,13 @@ const createUser = gql`
                 name
                 email
             }
+        }
+    }
+`;
+const deletePost = gql`
+    mutation($id: ID!) {
+        deletePost(id: $id) {
+            id
         }
     }
 `;
@@ -60,12 +77,28 @@ const posts = gql`
         }
     }
 `;
+const updatePost = gql`
+    mutation($id: ID!, $data: UpdatePostInput!) {
+        updatePost(
+            id: $id,
+            data: $data
+        ) {
+            id
+            title
+            body
+            published
+        }
+    }
+`;
 
 module.exports = {
+    createPost,
     createUser,
+    deletePost,
     getUsers,
     login,
     me,
     myPosts,
     posts,
+    updatePost,
 };

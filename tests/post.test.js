@@ -31,22 +31,13 @@ describe('myPosts', () => {
 describe('updatePost', () => {
     test('should be able to update own post', async() => {
         const client = getClient(userOne.jwt);
-        const mutation = gql`
-            mutation {
-                updatePost(
-                    id: "${posts[0].post.id}",
-                    data: {
-                        published: false
-                    }
-                ) {
-                    id
-                    title
-                    body
-                    published
-                }
+        const variables = {
+            id: posts[0].post.id,
+            data: {
+                published: false
             }
-        `;
-        const { data } = await client.mutate({ mutation });
+        };
+        const { data } = await client.mutate({ mutation: ops.updatePost, variables });
         expect(data.updatePost.published).toBe(false);
 
         const exists = await prisma.exists.Post({ id: posts[0].post.id, published: false });
@@ -57,23 +48,14 @@ describe('updatePost', () => {
 describe('createPost', () => {
     test('should be able to create a post', async() => {
         const client = getClient(userOne.jwt);
-        const mutation = gql`
-            mutation {
-                createPost(
-                    data: {
-                        title: "War and Peace",
-                        body: "???",
-                        published: true
-                    }
-                ) {
-                    id
-                    title
-                    body
-                    published
-                }
+        const variables = {
+            data: {
+                title: 'War and Peace',
+                body: '???',
+                published: true
             }
-        `;
-        const { data } = await client.mutate({ mutation });
+        };
+        const { data } = await client.mutate({ mutation: ops.createPost, variables });
         expect(data.createPost.title).toBe('War and Peace');
         expect(data.createPost.body).toBe('???');
         expect(data.createPost.published).toBe(true);
@@ -83,16 +65,10 @@ describe('createPost', () => {
 describe('deletePost', () => {
     test('should be able to create a post', async() => {
         const client = getClient(userOne.jwt);
-        const mutation = gql`
-            mutation {
-                deletePost(
-                    id: "${posts[1].post.id}"
-                ) {
-                    id
-                }
-            }
-        `;
-        await client.mutate({ mutation });
+        const variables = {
+            id: posts[1].post.id
+        };
+        await client.mutate({ mutation: ops.deletePost, variables });
         const exists = await prisma.exists.Post({ id: posts[1].post.id });
         expect(exists).toBe(false);
     });
