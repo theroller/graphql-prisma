@@ -35,6 +35,7 @@
   "jest": {
     "globalSetup": "./tests/jest/globalSetup.js",
     "globalTeardown": "./tests/jest/globalTeardown.js",
+    "setupFilesAfterEnv": ["./tests/jest/setupFilesAfterEnv.js"],
     "verbose": true
   },
   "nodemonConfig": {
