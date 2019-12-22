@@ -1,8 +1,8 @@
 'use strict';
 
-module.exports = teardown;
+module.exports = globalTeardown;
 
-async function teardown() {
+async function globalTeardown() {
     await global.httpServer.close();
     process.exit();
 }
