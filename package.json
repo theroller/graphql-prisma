@@ -9,7 +9,7 @@
     "lint": "eslint src tests",
     "start": "node src/index.js",
     "start:dev": "cross-env DOTENV_CONFIG_PATH=config/dev.env nodemon src/index.js",
-    "test": "cross-env DOTENV_CONFIG_PATH=config/test.env jest"
+    "test": "cross-env DOTENV_CONFIG_PATH=config/test.env jest --runInBand"
   },
   "keywords": [],
   "author": "James Roller, Jr. <og.readmore@gmail.com>",
