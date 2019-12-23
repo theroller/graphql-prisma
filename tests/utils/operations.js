@@ -108,6 +108,19 @@ const subscribeToComments = gql`
         }
     }
 `;
+const subscribeToPosts = gql`
+    subscription {
+        post {
+            mutation
+            node {
+                id
+                title
+                body
+                published
+            }
+        }
+    }
+`;
 
 module.exports = {
     createPost,
@@ -120,5 +133,6 @@ module.exports = {
     myPosts,
     posts,
     subscribeToComments,
+    subscribeToPosts,
     updatePost,
 };

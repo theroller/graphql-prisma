@@ -70,3 +70,17 @@ describe('deletePost', () => {
         expect(exists).toBe(false);
     });
 });
+
+describe('subscription to posts', () => {
+    test('should subscribe to post changes', async(done) => {
+        client.subscribe({ query: ops.subscribeToPosts }).subscribe({
+            next(response) {
+                expect(response.data.post.mutation).toBe('DELETED');
+                done();
+            }
+        });
+
+        // change a post
+        await prisma.mutation.deletePost({ where: { id: posts[0].post.id } });
+    });
+});
