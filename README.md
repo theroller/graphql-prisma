@@ -44,10 +44,13 @@ The following variables are used by docker-compose and can be put in a dotenv fi
 ```bash
 heroku login
 heroku create
+
+# all of the environment variables in config/prod.env must be set
+heroku config:set JWT_SECRET=super-secret
 heroku config:set NODE_ENV=production
+heroku config:set PORT=4000
 heroku config:set PRISMA_ENDPOINT=https://...
 heroku config:set PRISMA_SERVICE_SECRET=super-secret
-heroku config:set JWT_SECRET=super-secret
 
 # production
 git push heroku master
