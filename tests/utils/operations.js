@@ -22,6 +22,13 @@ const createUser = gql`
         }
     }
 `;
+const deleteComment = gql`
+    mutation($id: ID!) {
+        deleteComment(id: $id) {
+            id
+        }
+    }
+`;
 const deletePost = gql`
     mutation($id: ID!) {
         deletePost(id: $id) {
@@ -94,6 +101,7 @@ const updatePost = gql`
 module.exports = {
     createPost,
     createUser,
+    deleteComment,
     deletePost,
     getUsers,
     login,
