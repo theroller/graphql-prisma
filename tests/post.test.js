@@ -1,5 +1,3 @@
-require('cross-fetch/polyfill');
-
 const getClient = require('./utils/getClient');
 const ops = require('./utils/operations');
 const prisma = require('../src/prisma');
