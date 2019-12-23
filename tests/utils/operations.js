@@ -97,6 +97,17 @@ const updatePost = gql`
         }
     }
 `;
+const subscribeToComments = gql`
+    subscription($postID: ID!) {
+        comment(postID: $postID) {
+            mutation
+            node {
+                id
+                text
+            }
+        }
+    }
+`;
 
 module.exports = {
     createPost,
@@ -108,5 +119,6 @@ module.exports = {
     me,
     myPosts,
     posts,
+    subscribeToComments,
     updatePost,
 };
