@@ -1,4 +1,4 @@
-const { gql } = require('apollo-boost');
+const { default: gql } = require('graphql-tag');
 
 const createPost = gql`
     mutation($data: CreatePostInput!) {
