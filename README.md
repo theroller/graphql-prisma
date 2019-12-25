@@ -2,10 +2,6 @@
 
 Following along with [The Modern GraphQL Bootcamp (with Node.js and Apollo)](https://www.udemy.com/course/graphql-bootcamp).
 
-# Deviations
-
-* not using babel
-
 # Synchronize GraphQL Schema
 
 ```bash
@@ -19,9 +15,10 @@ The requirement for a .env file is controlled by DOTENV_CONFIG_PATH. When this v
 
 |Variable|Description|Example|
 |-|-|-|
-|JWT_SECRET||secret|
-|PRISMA_ENDPOINT||http://localhost:4466|
-|PRISMA_SERVICE_SECRET||secret|
+|JWT_SECRET|JSON web token secret|secret|
+|PORT|http server's port number|4000|
+|PRISMA_ENDPOINT|prisma server's endpoint|http://localhost:4466|
+|PRISMA_SERVICE_SECRET|authenticate requests made to the prisma server's API|secret|
 
 ## config/dev.env
 Set this file to run `npm run start:dev`.
@@ -30,7 +27,7 @@ Set this file to run `npm run start:dev`.
 Set this file to run `npm start`.
 
 ## Heroku Setup
-The following variables are used by docker-compose and can be put in a dotenv file (e.g. dev-primsa.env).
+The following variables are used by docker-compose and can be put in a dotenv file named `.env` in the prisma directory. The env_file and environment values in docker-compose.yml are for setting variables in the container.
 
 |Variable|Description|Example|
 |-|-|-|
@@ -57,9 +54,6 @@ git push heroku master
 # development (on branch dev here)
 git push heroku dev:master
 ```
-
-## docker-compose
-Local environment file must be named `.env`. The env_file and environment values in docker-compose.yml are for setting variables in the container.
 
 ## token
 In order to generate a token, the .env file from the config directory must be used.
